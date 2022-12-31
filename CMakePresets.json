@@ -1,0 +1,77 @@
+{
+    "version": 4,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 23,
+        "patch": 0
+    },
+
+    "configurePresets": [
+        {
+            "name": "common",
+            "cacheVariables": {
+                "BUILD_CONFIG": "debug",
+                "WARNING_CONFIG": "normal",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "on",
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}"
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Default Debug Config",
+            "description": "Default debug build configuration",
+            "generator": "Ninja",
+            "inherits": "common",
+            "binaryDir": "${sourceDir}/build/default-dbg",
+            "cacheVariables": {
+                "ENABLE_STATIC_TESTS": "on"
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Default Release Config",
+            "description": "Default release build configuration",
+            "generator": "Ninja",
+            "inherits": "common",
+            "binaryDir": "${sourceDir}/build/default-rel"
+        },
+        {
+            "name": "clangd",
+            "displayName": "Default Configuration for clangd commands",
+            "inherits": "common",
+            "binaryDir": "${sourceDir}/build/clangd",
+            "generator": "Ninja"
+        }
+    ],
+
+    "buildPresets": [
+        {
+            "name": "debug",
+            "displayName": "Default Debug Build",
+            "configuration": "Debug",
+            "inheritConfigureEnvironment": true,
+            "configurePreset": "debug",
+            "jobs": 14
+        },
+        {
+            "name": "release",
+            "displayName": "Default Release Build",
+            "configuration": "Release",
+            "inheritConfigureEnvironment": true,
+            "configurePreset": "release",
+            "jobs": 14
+        }
+    ],
+
+    "testPresets": [
+        {
+            "name": "debug",
+            "configurePreset": "debug",
+            "output": { "outputOnFailure": true },
+            "inheritConfigureEnvironment": true,
+            "execution": { "noTestsAction": "error", "stopOnFailure": true, "jobs": 14 }
+        }
+    ]
+}
